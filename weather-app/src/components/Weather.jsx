@@ -10,13 +10,7 @@ import wind_icon from '../assets/wind.png';
 import humidity_icon from '../assets/humidity.png';
 
 const Weather = () => {
-  const [weatherData, setWeatherData] = useState({
-    humidity: '',
-    windSpeed: '',
-    temperature: '',
-    location: '',
-    icon: clear_icon
-  });
+  const [weatherData, setWeatherData] = useState(null);
   const [city, setCity] = useState('');
 
   const allIcons = {
@@ -48,6 +42,7 @@ const Weather = () => {
 
       if (!response.ok) {
         alert(data.message || "Error fetching weather data");
+        setWeatherData(null); // Hide weather details
         return;
       }
 
@@ -62,13 +57,7 @@ const Weather = () => {
       });
     } catch (error) {
       console.error("Error in fetching weather data", error);
-      setWeatherData({
-        humidity: '',
-        windSpeed: '',
-        temperature: '',
-        location: '',
-        icon: clear_icon
-      });
+      setWeatherData(null);
     }
   };
 
@@ -79,27 +68,27 @@ const Weather = () => {
   return (
     <div className='weather'>
       <div className="search-bar">
-        <input 
-          type='text' 
-          placeholder='Search' 
-          value={city} 
-          onChange={(e) => setCity(e.target.value)} 
+        <input
+          type='text'
+          placeholder='Search'
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && search(city)}
         />
-        <img 
-          src={search_icon} 
-          alt="Search" 
-          onClick={() => search(city)} 
+        <img
+          src={search_icon}
+          alt="Search"
+          onClick={() => search(city)}
           style={{ cursor: "pointer" }}
         />
       </div>
 
-      {weatherData.location && (
+      {weatherData && (
         <>
           <img src={weatherData.icon} alt="" className='weather-icon' />
           <p className='temperature'>{weatherData.temperature}°C</p>
           <p className='location'>{weatherData.location}</p>
-          
+
           <div className="weather-data">
             <div className="col">
               <img src={humidity_icon} alt="Humidity" />
